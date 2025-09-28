@@ -2,6 +2,7 @@
 .Thumbs.db
 .vscode/
 .idea/
+env
 
 analytics/venv
 analytics/__pycache__
