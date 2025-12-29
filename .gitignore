@@ -90,6 +90,11 @@ frontend/.env.development.local
 frontend/.env.test.local
 frontend/.env.production.local
 
+# Service files with hardcoded credentials
+frontend/src/services/supabase.js
+frontend/src/services/api.js
+frontend/src/services/websocket.js
+
 # ========================
 # Backend (Java / Maven / Spring Boot)
 # ========================
