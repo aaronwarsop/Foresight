@@ -82,6 +82,8 @@ frontend/.nyc_output/
 frontend/build/
 
 # Misc
+SUPABASE_SETUP.md
+CREDENTIALS_CHECKLIST.md
 frontend/.env
 frontend/.env.local
 frontend/.env.development.local
@@ -133,6 +135,7 @@ backend/*.sqlite3
 backend/data/
 
 # Configuration files that may contain secrets
+backend/src/main/resources/application.properties
 backend/src/main/resources/application-local.properties
 backend/src/main/resources/application-dev.properties
 backend/src/main/resources/application-prod.properties
