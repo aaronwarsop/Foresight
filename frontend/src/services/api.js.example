@@ -1,0 +1,38 @@
+import axios from 'axios';
+
+// Copy this file to api.js and replace with your actual API URL
+const API_BASE_URL = 'http://localhost:8080';
+
+const api = axios.create({
+  baseURL: `${API_BASE_URL}/api`,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Portfolio API
+export const portfolioAPI = {
+  getUserPortfolio: (userId) => api.get(`/portfolio/${userId}`),
+  addStock: (userId, symbol, quantity, buyPrice) =>
+    api.post('/portfolio', { userId, symbol, quantity, buyPrice }),
+  removeStock: (holdingId) => api.delete(`/portfolio/${holdingId}`),
+  getPortfolioAnalysis: (userId) => api.get(`/portfolio/analysis/${userId}`),
+};
+
+// Account API
+export const accountAPI = {
+  getAccountInfo: (userId) => api.get(`/account/${userId}`),
+  addDeposit: (userId, amount, description) =>
+    api.post('/account/deposit', { userId, amount, description }),
+  getDeposits: (userId) => api.get(`/account/${userId}/deposits`),
+};
+
+// Stock API
+export const stockAPI = {
+  getStockQuote: (symbol) => api.get(`/stocks/${symbol}/quote`),
+  getStockInfo: (symbol) => api.get(`/stocks/${symbol}`),
+  searchStocks: (query) => api.get(`/stocks/search/${query}`),
+};
+
+export default api;

@@ -1,0 +1,7 @@
+import { createClient } from '@supabase/supabase-js';
+
+// Copy this file to supabase.js and replace with your actual credentials
+const supabaseUrl = 'YOUR_SUPABASE_URL_HERE';
+const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY_HERE';
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
