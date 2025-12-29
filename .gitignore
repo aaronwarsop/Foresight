@@ -1,0 +1,348 @@
+# ========================
+# Operating System Files
+# ========================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.ico
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ========================
+# IDE / Editor Files
+# ========================
+
+# VS Code
+.vscode/
+*.code-workspace
+.history/
+.claude/
+
+# ========================
+# Frontend (React Native / Expo)
+# ========================
+
+# Dependencies
+frontend/node_modules/
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/lerna-debug.log*
+
+# Expo
+frontend/.expo/
+frontend/.expo-shared/
+frontend/dist/
+frontend/web-build/
+
+# React Native
+frontend/ios/Pods/
+frontend/ios/build/
+frontend/android/.gradle/
+frontend/android/app/build/
+frontend/android/build/
+frontend/android/local.properties
+frontend/android/.idea/
+frontend/android/captures/
+frontend/android/.externalNativeBuild/
+
+# Testing
+frontend/coverage/
+frontend/.nyc_output/
+
+# Production
+frontend/build/
+
+# Misc
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+# ========================
+# Backend (Java / Maven / Spring Boot)
+# ========================
+
+# Maven
+backend/target/
+backend/pom.xml.tag
+backend/pom.xml.releaseBackup
+backend/pom.xml.versionsBackup
+backend/pom.xml.next
+backend/release.properties
+backend/dependency-reduced-pom.xml
+backend/buildNumber.properties
+backend/.mvn/timing.properties
+backend/.mvn/wrapper/maven-wrapper.jar
+
+# Spring Boot
+backend/HELP.md
+backend/.apt_generated
+backend/.factorypath
+backend/.springBeans
+backend/.sts4-cache
+
+# Java
+backend/*.class
+backend/*.log
+backend/*.jar
+backend/*.war
+backend/*.ear
+backend/*.zip
+backend/*.tar.gz
+backend/*.rar
+backend/hs_err_pid*
+
+# Logs
+backend/logs/
+backend/*.log
+
+# Database
+backend/*.db
+backend/*.sqlite
+backend/*.sqlite3
+backend/data/
+
+# Configuration files that may contain secrets
+backend/src/main/resources/application-local.properties
+backend/src/main/resources/application-dev.properties
+backend/src/main/resources/application-prod.properties
+backend/src/main/resources/application-secret.properties
+
+# ========================
+# Analytics (Python)
+# ========================
+
+# Virtual Environment
+analytics/venv/
+analytics/env/
+analytics/ENV/
+analytics/.venv/
+
+# Python
+analytics/__pycache__/
+analytics/*.py[cod]
+analytics/*$py.class
+analytics/*.so
+analytics/.Python
+analytics/build/
+analytics/develop-eggs/
+analytics/dist/
+analytics/downloads/
+analytics/eggs/
+analytics/.eggs/
+analytics/lib/
+analytics/lib64/
+analytics/parts/
+analytics/sdist/
+analytics/var/
+analytics/wheels/
+analytics/share/python-wheels/
+analytics/*.egg-info/
+analytics/.installed.cfg
+analytics/*.egg
+analytics/MANIFEST
+
+# PyInstaller
+analytics/*.manifest
+analytics/*.spec
+
+# Unit test / coverage reports
+analytics/htmlcov/
+analytics/.tox/
+analytics/.nox/
+analytics/.coverage
+analytics/.coverage.*
+analytics/.cache
+analytics/nosetests.xml
+analytics/coverage.xml
+analytics/*.cover
+analytics/*.py,cover
+analytics/.hypothesis/
+analytics/.pytest_cache/
+analytics/cover/
+
+# Jupyter Notebook
+analytics/.ipynb_checkpoints
+analytics/**/.ipynb_checkpoints/
+
+# IPython
+analytics/profile_default/
+analytics/ipython_config.py
+
+# pyenv
+analytics/.python-version
+
+# Environments
+analytics/.env
+analytics/.venv
+analytics/env/
+analytics/venv/
+analytics/ENV/
+analytics/env.bak/
+analytics/venv.bak/
+
+# Spyder
+analytics/.spyderproject
+analytics/.spyproject
+
+# Rope
+analytics/.ropeproject
+
+# Data files (sensitive data, large datasets)
+analytics/data/*.csv
+analytics/data/*.json
+analytics/data/*.xlsx
+analytics/data/*.xls
+analytics/data/*.db
+analytics/data/*.sqlite
+analytics/data/*.pkl
+analytics/data/*.pickle
+
+# Model files (can be large)
+analytics/models/*.h5
+analytics/models/*.pkl
+analytics/models/*.pickle
+analytics/models/*.joblib
+analytics/models/*.pt
+analytics/models/*.pth
+analytics/models/*.onnx
+
+# Visualization outputs
+analytics/visualizations/*.html
+analytics/visualizations/*.png
+analytics/visualizations/*.jpg
+analytics/visualizations/*.pdf
+
+# ========================
+# Sensitive Information
+# ========================
+
+# API Keys and Secrets
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+*.p12
+*.pfx
+secrets.json
+credentials.json
+config/secrets.yaml
+config/credentials.yaml
+
+# SSL Certificates
+*.crt
+*.cer
+*.der
+
+# ========================
+# Logs and Databases
+# ========================
+
+*.log
+logs/
+*.sql
+*.sqlite
+*.db
+
+# ========================
+# Backup Files
+# ========================
+
+*.bak
+*.backup
+*.old
+*.orig
+*.save
+
+# ========================
+# Compiled Source
+# ========================
+
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# ========================
+# Package Files
+# ========================
+
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# ========================
+# Temporary Files
+# ========================
+
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# ========================
+# Cloud & CI/CD
+# ========================
+
+# AWS
+.aws/
+*.pem
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
+
+# ========================
+# Keep these directories but not their contents
+# ========================
+
+analytics/data/*
+!analytics/data/.gitkeep
+analytics/models/*
+!analytics/models/.gitkeep
+analytics/visualizations/*
+!analytics/visualizations/.gitkeep
