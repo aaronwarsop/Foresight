@@ -77,7 +77,7 @@ const DashboardScreen = () => {
         <PortfolioPieChart portfolioAnalysis={portfolioAnalysis} />
       </View>
       <View style={isWeb ? styles.bottomRowItem : styles.mobileItem}>
-        <PortfolioTable portfolio={portfolioAnalysis?.holdings || []} />
+        <PortfolioTable portfolio={portfolioAnalysis?.holdings || []} userId={userId} />
       </View>
     </View>
   );
@@ -102,26 +102,46 @@ const styles = StyleSheet.create({
   },
   topRow: {
     flexDirection: 'row',
-    gap: 16,
     marginBottom: 16,
   },
   topRowItem: {
     flex: 1,
+    marginRight: 16,
   },
   bottomRow: {
     flexDirection: 'row',
-    gap: 16,
   },
   bottomRowItem: {
     flex: 1,
+    marginRight: 16,
   },
   mobileStack: {
     flexDirection: 'column',
-    gap: 16,
     marginBottom: 16,
   },
   mobileItem: {
     width: '100%',
+    marginBottom: 16,
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 16,
+    color: '#666',
+  },
+  errorText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#f44336',
+    marginBottom: 8,
+  },
+  errorDetail: {
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'center',
   },
 });
 

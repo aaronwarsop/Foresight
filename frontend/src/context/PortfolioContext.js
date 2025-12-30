@@ -42,24 +42,27 @@ export const PortfolioProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
+      console.log('Adding stock with params:', { userId, symbol, quantity, buyPrice });
       const response = await portfolioAPI.addStock(userId, symbol, quantity, buyPrice);
-      await fetchPortfolio(userId);
+      console.log('Stock added successfully:', response.data);
+      await fetchPortfolioAnalysis(userId);
       return response.data;
     } catch (err) {
       setError(err.message);
       console.error('Error adding stock:', err);
+      console.error('Error response:', err.response?.data);
       throw err;
     } finally {
       setLoading(false);
     }
-  }, [fetchPortfolio]);
+  }, [fetchPortfolioAnalysis]);
 
   const removeStock = useCallback(async (userId, holdingId) => {
     setLoading(true);
     setError(null);
     try {
       await portfolioAPI.removeStock(holdingId);
-      await fetchPortfolio(userId);
+      await fetchPortfolioAnalysis(userId);
     } catch (err) {
       setError(err.message);
       console.error('Error removing stock:', err);
@@ -67,7 +70,7 @@ export const PortfolioProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [fetchPortfolio]);
+  }, [fetchPortfolioAnalysis]);
 
   const value = {
     portfolio,

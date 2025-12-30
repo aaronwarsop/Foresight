@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
-import { VictoryPie, VictoryLegend } from 'victory-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { PieChart } from 'react-native-chart-kit';
 
 const PortfolioPieChart = ({ portfolioAnalysis }) => {
   if (!portfolioAnalysis || !portfolioAnalysis.holdings || portfolioAnalysis.holdings.length === 0) {
@@ -15,15 +15,6 @@ const PortfolioPieChart = ({ portfolioAnalysis }) => {
     );
   }
 
-  const chartData = portfolioAnalysis.holdings.map((holding, index) => {
-    const percentage = (parseFloat(holding.currentValue || 0) / parseFloat(portfolioAnalysis.totalCurrentValue || 1)) * 100;
-    return {
-      x: holding.stock.symbol,
-      y: percentage,
-      label: `${holding.stock.symbol}\n${percentage.toFixed(1)}%`,
-    };
-  });
-
   const colors = [
     '#1a73e8',
     '#4caf50',
@@ -37,39 +28,51 @@ const PortfolioPieChart = ({ portfolioAnalysis }) => {
     '#e91e63',
   ];
 
-  const legendData = portfolioAnalysis.holdings.map((holding, index) => ({
-    name: `${holding.stock.symbol} - ${((parseFloat(holding.currentValue || 0) / parseFloat(portfolioAnalysis.totalCurrentValue || 1)) * 100).toFixed(1)}%`,
-    symbol: { fill: colors[index % colors.length] },
-  }));
+  const chartData = portfolioAnalysis.holdings.map((holding, index) => {
+    const percentage = (parseFloat(holding.currentValue || 0) / parseFloat(portfolioAnalysis.totalCurrentValue || 1)) * 100;
+    return {
+      name: holding.stock.symbol,
+      value: parseFloat(holding.currentValue || 0),
+      color: colors[index % colors.length],
+      legendFontColor: '#333',
+      legendFontSize: 12,
+    };
+  });
+
+  const screenWidth = Dimensions.get('window').width;
+  const chartWidth = Math.min(screenWidth - 80, 320);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Portfolio Composition</Text>
 
       <View style={styles.chartContainer}>
-        <VictoryPie
+        <PieChart
           data={chartData}
-          colorScale={colors}
-          innerRadius={60}
-          labelRadius={80}
-          style={{
-            labels: { fontSize: 10, fill: '#333', fontWeight: 'bold' },
+          width={chartWidth}
+          height={220}
+          chartConfig={{
+            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
           }}
-          width={300}
-          height={300}
+          accessor="value"
+          backgroundColor="transparent"
+          paddingLeft="15"
+          absolute
         />
       </View>
 
       <View style={styles.legendContainer}>
-        <VictoryLegend
-          data={legendData}
-          orientation="vertical"
-          gutter={20}
-          style={{
-            labels: { fontSize: 11, fill: '#666' },
-          }}
-          width={280}
-        />
+        {portfolioAnalysis.holdings.map((holding, index) => {
+          const percentage = ((parseFloat(holding.currentValue || 0) / parseFloat(portfolioAnalysis.totalCurrentValue || 1)) * 100).toFixed(1);
+          return (
+            <View key={index} style={styles.legendItem}>
+              <View style={[styles.legendColor, { backgroundColor: colors[index % colors.length] }]} />
+              <Text style={styles.legendText}>
+                {holding.stock.symbol} - {percentage}%
+              </Text>
+            </View>
+          );
+        })}
       </View>
     </View>
   );
@@ -99,8 +102,23 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   legendContainer: {
-    marginTop: 10,
+    marginTop: 20,
+    paddingHorizontal: 10,
+  },
+  legendItem: {
+    flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 8,
+  },
+  legendColor: {
+    width: 16,
+    height: 16,
+    borderRadius: 4,
+    marginRight: 8,
+  },
+  legendText: {
+    fontSize: 12,
+    color: '#333',
   },
   emptyState: {
     alignItems: 'center',
