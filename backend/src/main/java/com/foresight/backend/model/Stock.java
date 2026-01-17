@@ -27,7 +27,7 @@ public class Stock {
     @Column(precision = 10, scale = 2)
     private BigDecimal currentPrice;
 
-    @Column(precision = 5, scale = 2)
+    @Column(precision = 10, scale = 4)
     private BigDecimal dividendYield;
 
     @Column(precision = 10, scale = 2)

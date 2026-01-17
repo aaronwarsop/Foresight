@@ -26,13 +26,25 @@ public class PortfolioController {
 
     @PostMapping
     public ResponseEntity<PortfolioHolding> addStock(@RequestBody AddStockRequest request) {
-        PortfolioHolding holding = portfolioService.addStockToPortfolio(
-                request.getUserId(),
-                request.getSymbol(),
-                request.getQuantity(),
-                request.getBuyPrice()
-        );
-        return ResponseEntity.ok(holding);
+        try {
+            System.out.println("Received request: " + request);
+            System.out.println("UserId: " + request.getUserId());
+            System.out.println("Symbol: " + request.getSymbol());
+            System.out.println("Quantity: " + request.getQuantity());
+            System.out.println("BuyPrice: " + request.getBuyPrice());
+
+            PortfolioHolding holding = portfolioService.addStockToPortfolio(
+                    request.getUserId(),
+                    request.getSymbol(),
+                    request.getQuantity(),
+                    request.getBuyPrice()
+            );
+            return ResponseEntity.ok(holding);
+        } catch (Exception e) {
+            System.err.println("Error adding stock: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @GetMapping("/analysis/{userId}")

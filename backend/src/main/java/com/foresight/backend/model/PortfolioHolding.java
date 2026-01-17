@@ -41,7 +41,7 @@ public class PortfolioHolding {
     @Column(precision = 15, scale = 2)
     private BigDecimal profitLoss;
 
-    @Column(precision = 5, scale = 2)
+    @Column(precision = 10, scale = 4)
     private BigDecimal profitLossPercentage;
 
     @Column(nullable = false)

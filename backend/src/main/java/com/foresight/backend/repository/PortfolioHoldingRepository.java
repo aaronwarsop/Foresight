@@ -23,4 +23,7 @@ public interface PortfolioHoldingRepository extends JpaRepository<PortfolioHoldi
 
     @Query("SELECT SUM(ph.currentValue) FROM PortfolioHolding ph WHERE ph.user.id = :userId")
     Double getTotalCurrentValueByUserId(Long userId);
+
+    @Query("SELECT COUNT(ph) FROM PortfolioHolding ph WHERE ph.stock.id = :stockId")
+    Long countByStockId(Long stockId);
 }

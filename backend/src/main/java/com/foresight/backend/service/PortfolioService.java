@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -119,22 +121,138 @@ public class PortfolioService {
 
     @Transactional
     public void removeStock(Long holdingId) {
+        // Get the holding to find the associated stock
+        PortfolioHolding holding = portfolioHoldingRepository.findById(holdingId)
+                .orElseThrow(() -> new RuntimeException("Holding not found"));
+
+        Long stockId = holding.getStock().getId();
+
+        // Delete the holding
         portfolioHoldingRepository.deleteById(holdingId);
+
+        // Check if any other holdings reference this stock
+        Long remainingHoldings = portfolioHoldingRepository.countByStockId(stockId);
+
+        // If no other holdings reference this stock, delete it
+        if (remainingHoldings == 0) {
+            stockRepository.deleteById(stockId);
+        }
     }
 
     private Stock createNewStock(String symbol) {
         try {
+            System.out.println("Creating new stock for symbol: " + symbol);
             JsonNode profile = finnhubService.getCompanyProfile(symbol);
+            System.out.println("Company profile: " + profile);
+
             StockPriceUpdate quote = finnhubService.getStockQuote(symbol);
+            System.out.println("Quote: " + quote);
 
             Stock stock = new Stock();
             stock.setSymbol(symbol);
-            stock.setCompanyName(profile.get("name").asText());
+
+            // Handle cases where company name might be null or missing
+            String companyName = symbol; // Default to symbol
+            if (profile != null && profile.has("name") && !profile.get("name").isNull()) {
+                companyName = profile.get("name").asText();
+            }
+            stock.setCompanyName(companyName);
             stock.setCurrentPrice(quote.getCurrentPrice());
 
+            // Fetch and populate dividend data
+            populateDividendData(stock, symbol);
+
+            // Fetch and populate earnings data
+            populateEarningsData(stock, symbol);
+
+            System.out.println("Saving stock: " + stock);
             return stockRepository.save(stock);
         } catch (Exception e) {
+            System.err.println("Failed to create stock for symbol: " + symbol);
+            e.printStackTrace();
             throw new RuntimeException("Failed to create stock for symbol: " + symbol, e);
+        }
+    }
+
+    private void populateDividendData(Stock stock, String symbol) {
+        try {
+            JsonNode dividends = finnhubService.getDividends(symbol);
+            if (dividends != null && dividends.isArray() && dividends.size() > 0) {
+                // Calculate annual dividend from the last year of dividends
+                BigDecimal annualDividend = BigDecimal.ZERO;
+                LocalDateTime oneYearAgo = LocalDateTime.now().minusYears(1);
+                LocalDateTime nextDividendDate = null;
+
+                for (JsonNode dividend : dividends) {
+                    if (dividend.has("date") && dividend.has("amount")) {
+                        String dateStr = dividend.get("date").asText();
+                        LocalDateTime dividendDate = LocalDateTime.parse(dateStr + "T00:00:00");
+
+                        // Sum up dividends from the last year for annual calculation
+                        if (dividendDate.isAfter(oneYearAgo)) {
+                            BigDecimal amount = BigDecimal.valueOf(dividend.get("amount").asDouble());
+                            annualDividend = annualDividend.add(amount);
+                        }
+
+                        // Find the most recent dividend date as a proxy for next dividend
+                        // (In production, you'd use a more sophisticated prediction)
+                        if (nextDividendDate == null || dividendDate.isAfter(nextDividendDate)) {
+                            nextDividendDate = dividendDate;
+                        }
+                    }
+                }
+
+                stock.setAnnualDividend(annualDividend);
+
+                // Calculate dividend yield
+                if (stock.getCurrentPrice() != null && stock.getCurrentPrice().compareTo(BigDecimal.ZERO) > 0) {
+                    BigDecimal dividendYield = annualDividend
+                            .divide(stock.getCurrentPrice(), 4, RoundingMode.HALF_UP)
+                            .multiply(BigDecimal.valueOf(100));
+                    stock.setDividendYield(dividendYield);
+                }
+
+                // Set estimated next dividend date (approximately 3 months after last)
+                if (nextDividendDate != null) {
+                    stock.setNextDividendDate(nextDividendDate.plusMonths(3));
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Warning: Could not populate dividend data for " + symbol + ": " + e.getMessage());
+        }
+    }
+
+    private void populateEarningsData(Stock stock, String symbol) {
+        try {
+            JsonNode earningsCalendar = finnhubService.getEarningsCalendar(symbol);
+            if (earningsCalendar != null && earningsCalendar.has("earningsCalendar")) {
+                JsonNode earnings = earningsCalendar.get("earningsCalendar");
+                if (earnings.isArray() && earnings.size() > 0) {
+                    // Find the next upcoming earnings date
+                    LocalDateTime now = LocalDateTime.now();
+                    LocalDateTime nextEarningsDate = null;
+
+                    for (JsonNode earning : earnings) {
+                        if (earning.has("date")) {
+                            String dateStr = earning.get("date").asText();
+                            LocalDateTime earningsDate = LocalDateTime.parse(dateStr + "T00:00:00");
+
+                            // Find the closest future earnings date
+                            if (earningsDate.isAfter(now)) {
+                                if (nextEarningsDate == null || earningsDate.isBefore(nextEarningsDate)) {
+                                    nextEarningsDate = earningsDate;
+                                }
+                            }
+                        }
+                    }
+
+                    if (nextEarningsDate != null) {
+                        stock.setNextEarningsDate(nextEarningsDate);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Warning: Could not populate earnings data for " + symbol + ": " + e.getMessage());
         }
     }
 
